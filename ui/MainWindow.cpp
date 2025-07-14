@@ -1,7 +1,9 @@
 #include "MainWindow.h"
 
 #include "model/Agent.h"
+#include "model/Target.h"
 #include "view/AgentItem.h"
+#include "view/TargetItem.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -17,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setMinimumSize(800, 600);
 
     m_agent = std::make_unique<model::Agent>(0, 0);
+    m_target = std::make_unique<model::Target>(0, -100);
 
     createGui();
 
@@ -36,6 +39,9 @@ void MainWindow::createGui()
 
     m_agentItem = new view::AgentItem(m_agent.get());
     graphicsScene->addItem(m_agentItem);
+
+    m_targetItem = new view::TargetItem(m_target.get());
+    graphicsScene->addItem(m_targetItem);
 
     auto* graphicsView = new QGraphicsView{};
     graphicsView->setScene(graphicsScene);
