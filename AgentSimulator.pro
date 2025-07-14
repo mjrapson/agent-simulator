@@ -5,10 +5,10 @@ TARGET = AgentSimulator
 TEMPLATE = app
 
 SOURCES +=  main.cpp\
-            mainwindow.cpp \
-            model/agent.cpp \
+            model/Agent.cpp \
+            ui/MainWindow.cpp \
             view/AgentItem.cpp
 
-HEADERS  += mainwindow.h \
-            model/agent.h \
+HEADERS  += model/Agent.h \
+            ui/MainWindow.h \
             view/AgentItem.h

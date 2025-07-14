@@ -1,6 +1,6 @@
-#include "mainwindow.h"
+#include "MainWindow.h"
 
-#include "model/agent.h"
+#include "model/Agent.h"
 #include "view/AgentItem.h"
 
 #include <QGraphicsScene>

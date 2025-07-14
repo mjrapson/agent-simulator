@@ -1,6 +1,6 @@
 #include "AgentItem.h"
 
-#include "model/agent.h"
+#include "model/Agent.h"
 
 #include <QBrush>
 

@@ -1,4 +1,4 @@
-#include "model/agent.h"
+#include "model/Agent.h"
 
 #include <qmath.h>
 
