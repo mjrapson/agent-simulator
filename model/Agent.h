@@ -1,20 +1,13 @@
 #pragma once
 
+#include "SimulationActor.h"
+
 namespace model
 {
-class Agent
+class Agent : public SimulationActor
 {
 public:
-    Agent(double x, double y);
+    Agent();
     ~Agent();
-
-    void moveForward(double distance, double angle);
-
-    double x() const;
-    double y() const;
-
-private:
-    double m_x{0.0};
-    double m_y{0.0};
 };
 }

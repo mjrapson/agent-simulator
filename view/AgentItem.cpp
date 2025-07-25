@@ -20,6 +20,7 @@ AgentItem::AgentItem(model::Agent* agent, QGraphicsItem* parent)
 
 void AgentItem::update()
 {
-    setPos(m_agent->x(), m_agent->y());
+    setPos(m_agent->position().x(), m_agent->position().y());
+    setRotation(m_agent->rotation() + 90);
 }
 }

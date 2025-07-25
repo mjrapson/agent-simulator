@@ -1,11 +1,13 @@
 #include "MainWindow.h"
 
+#include "core/Point2D.h"
+#include "core/VectorMath.h"
 #include "model/Agent.h"
 #include "model/Target.h"
 #include "view/AgentItem.h"
+#include "view/GraphicsScene.h"
 #include "view/TargetItem.h"
 
-#include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -18,8 +20,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setMinimumSize(800, 600);
 
-    m_agent = std::make_unique<model::Agent>(0, 0);
-    m_target = std::make_unique<model::Target>(0, -100);
+    for(auto i = 0; i < 4; ++i)
+    {
+        auto agent = std::make_unique<model::Agent>();
+        agent->setPosition(core::Point2D{25.0 * i, 10.0 * i});
+        m_agents.push_back(std::move(agent));
+    }
+
+    m_target = std::make_unique<model::Target>();
+    m_target->setPosition(core::Point2D{0, -100});
 
     createGui();
 
@@ -34,18 +43,19 @@ void MainWindow::createGui()
     auto* mainWidget = new QWidget{};
     auto* mainLayout = new QVBoxLayout{mainWidget};
 
-    auto* graphicsScene = new QGraphicsScene{};
-    graphicsScene->setSceneRect(-250, -250, WorldWidth, WorldHeight);
-
-    m_agentItem = new view::AgentItem(m_agent.get());
-    graphicsScene->addItem(m_agentItem);
+    m_graphicsScene = new view::GraphicsScene{this};
+    m_graphicsScene->setSceneRect(-250, -250, WorldWidth, WorldHeight);
+    for(auto&& agent : m_agents)
+    {
+        m_graphicsScene->addAgent(std::make_unique<view::AgentItem>(agent.get()));
+    }
 
     m_targetItem = new view::TargetItem(m_target.get());
-    graphicsScene->addItem(m_targetItem);
+    m_graphicsScene->addItem(m_targetItem);
 
     auto* graphicsView = new QGraphicsView{};
-    graphicsView->setScene(graphicsScene);
-    graphicsView->fitInView(graphicsScene->sceneRect(), Qt::KeepAspectRatio);
+    graphicsView->setScene(m_graphicsScene);
+    graphicsView->fitInView(m_graphicsScene->sceneRect(), Qt::KeepAspectRatio);
     mainLayout->addWidget(graphicsView);
 
     auto* buttonLayout = new QHBoxLayout{};
@@ -62,8 +72,24 @@ void MainWindow::createGui()
 
 void MainWindow::stepSimulation()
 {
-    m_agent->moveForward(1.0, -90.0);
-    m_agentItem->update();
+    processAgents();
+
+    m_graphicsScene->update();
+}
+
+void MainWindow::processAgents()
+{
+    constexpr auto agentSpeed = 40.0;
+    const auto deltaTime = m_simulationTimer.interval() / 1000.0;
+    for(auto&& agent : m_agents)
+    {
+        const auto position = agent->position();
+        const auto direction = core::forwardVectorFromAngle(agent->rotation());
+
+        const auto newPosition = position + (direction * agentSpeed * deltaTime);
+
+        agent->setPosition(newPosition);
+    }
 }
 
 void MainWindow::onStartPressed()

@@ -10,8 +10,6 @@ TargetItem::TargetItem(model::Target* target, QGraphicsItem* parent)
     : QGraphicsPolygonItem(parent)
     , m_target{target}
 {
-    QPolygonF triangle;
-    triangle << QPointF(0, -20) << QPointF(10, 10) << QPointF(-10, 10);
     setPolygon(QPolygonF(QRectF(0, 0, 20, 20)));
     setBrush(Qt::green);
 
@@ -20,6 +18,6 @@ TargetItem::TargetItem(model::Target* target, QGraphicsItem* parent)
 
 void TargetItem::update()
 {
-    setPos(m_target->x(), m_target->y());
+    setPos(m_target->position().x(), m_target->position().y());
 }
 }
